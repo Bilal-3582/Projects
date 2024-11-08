@@ -36,3 +36,6 @@ In this project, an LSTM (Long Short-Term Memory) model was implemented to detec
 - **Visualization** helped in understanding the performance of the model on the test dataset.
 
 This approach shows that LSTM models, commonly used for sequential data, can be quite effective in text classification tasks like phishing email detection.
+
+### Furute Works:
+For future work, the phishing email detection system can be integrated with Wazuh, an open-source security monitoring platform, to enhance real-time detection and response capabilities. Wazuh can be used to monitor system logs, network traffic, and other security-related events in real time, providing a more comprehensive approach to cybersecurity by automating the detection of phishing emails and malicious activity.
