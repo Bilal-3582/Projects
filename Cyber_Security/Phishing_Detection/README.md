@@ -1,4 +1,4 @@
-### Summary of the Phishing Email Detection Model Using LSTM
+##### Phishing Email Detection Model Using LSTM
 
 In this project, an LSTM (Long Short-Term Memory) model was implemented to detect phishing emails from a dataset titled `Phishing_Email.csv`, which was sourced from Kaggle. The main steps in the process include data loading, preprocessing, model building, training, and evaluation, which are summarized below:
 
