@@ -2,6 +2,8 @@
 
 In this project, an LSTM (Long Short-Term Memory) model was implemented to detect phishing emails from a dataset titled `Phishing_Email.csv`, which was sourced from Kaggle. The main steps in the process include data loading, preprocessing, model building, training, and evaluation, which are summarized below:
 
+[Phishing_Email.csv](https://www.kaggle.com/datasets/subhajournal/phishingemails)
+
 1. **Data Loading and Preprocessing**:
    - The CSV file `Phishing_Email.csv` was loaded, containing two columns: "Email Text" (the content of the email) and "Email Type" (either "Safe Email" or "Phishing Email").
    - The dataset was cleaned by dropping rows where the "Email Text" column had missing values.
