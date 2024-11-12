@@ -1,4 +1,3 @@
-Here's the revised proposal with the added explanation for the **Floyd-Warshall Algorithm** and the requested pseudocode. This version includes all sections in a more integrated and polished format.
 
 ---
 
@@ -191,12 +190,13 @@ Function FloydWarshallMPI(D, Π, n, pid, pN):
 ## **Performance Comparison**
 
 ### **N-Ary Search Results**  
-- **N=4**, Data Size: 10,000 Elements  
+- **N=4**, Data Size: 10,000 Elements
 - **N=16**, Same Data Size  
   - The search times remain constant across different values of \(N\), indicating that only data size impacts performance, not the subdivision factor.
 
 ### **Floyd-Warshall Results**  
-- **N=100 Vertices (10,000 Edges)**  
+- **N=100 Vertices (10,000 Edges)**
+-  
 - **N=1000 Vertices (1 Million Edges)**  
   - OpenMP performs significantly better than MPI, with MPI facing communication overhead due to frequent inter-process data exchanges, especially for larger graphs.
 
