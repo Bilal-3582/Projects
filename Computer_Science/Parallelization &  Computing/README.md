@@ -191,6 +191,7 @@ Function FloydWarshallMPI(D, Π, n, pid, pN):
 
 ### **N-Ary Search Results**  
 - **N=4**, Data Size: 10,000 Elements
+- ![Chart _1](https://github.com/user-attachments/assets/d21b4ffe-929d-4cc3-a3fb-97ad6435ff35)
 - **N=16**, Same Data Size  
   - The search times remain constant across different values of \(N\), indicating that only data size impacts performance, not the subdivision factor.
 
