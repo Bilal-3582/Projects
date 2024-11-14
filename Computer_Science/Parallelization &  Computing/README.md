@@ -201,8 +201,14 @@ Function FloydWarshallMPI(D, Π, n, pid, pN):
 
 ### **Floyd-Warshall Results**  
 - **N=100 Vertices (10,000 Edges)**
--  
-- **N=1000 Vertices (1 Million Edges)**  
+-  ![Chart_4](https://github.com/user-attachments/assets/79997a67-42fd-43ee-9ce3-a8057840305f)
+
+- **N=1000 Vertices (1 Million Edges)**
+- ![Chart_5](https://github.com/user-attachments/assets/b1e6a191-9c60-4096-8bd3-bf35c2238539)
+
+- **Floyd-Warshall N=100** Communication & Computation (X = Cores , Y = Time)
+- ![Chart_6](https://github.com/user-attachments/assets/7ab7529f-c8d4-4236-a2f8-b7e6f1b0c185)
+
   - OpenMP performs significantly better than MPI, with MPI facing communication overhead due to frequent inter-process data exchanges, especially for larger graphs.
 
 ---
