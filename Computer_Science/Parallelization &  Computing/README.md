@@ -195,8 +195,8 @@ Function FloydWarshallMPI(D, Π, n, pid, pN):
 - **N=16**, Same Data Size
 -   ![Chart_2](https://github.com/user-attachments/assets/3d3cbed2-a98d-49f8-8fac-f9dc49300e62)
 
-  - The search times remain constant across different values of \(N\), indicating that only data size impacts performance, not the subdivision factor.
-- **N-Ary N=4** , Communication & Communication
+  - (We can see that value of n don’t make any difference only the data size effects the time, however the computation times remain equal for any number of cores)
+- **N-Ary N=4** , Communication & Computation
 - ![Chart_3](https://github.com/user-attachments/assets/a1db6c91-d0b1-4c79-a250-656c092f382a)
 
 ### **Floyd-Warshall Results**  
@@ -209,14 +209,15 @@ Function FloydWarshallMPI(D, Π, n, pid, pN):
 - **Floyd-Warshall N=100** Communication & Computation (X = Cores , Y = Time)
 - ![Chart_6](https://github.com/user-attachments/assets/7ab7529f-c8d4-4236-a2f8-b7e6f1b0c185)
 
-  - OpenMP performs significantly better than MPI, with MPI facing communication overhead due to frequent inter-process data exchanges, especially for larger graphs.
+  - THE Difference between OMP and MPI in Floyd Warshall is very high, so visible that the OMP on scale seems almost negligible.
 
 ---
 
 ## **Conclusion**  
-For the **N-ary search algorithm**, dividing the array into subarrays processed by multiple threads or processes significantly speeds up the search. MPI outperformed OpenMP by about 5x because we focused purely on computation time, ignoring initial communication overhead. Once subarrays were broadcasted, no further communication was needed.
+Okay so, this is very straightforward for n-ary search algorithm, when we divide the array into subarrays onto different processes/threads, they automatically speedup, by a lot, the main thing to notice is that MPI was 5 times faster than OMP, this was the case here because we did not take into account the communication time in start, only the computation time, once broadcasted the subarrays there was no communication between processes in between of computing algorithm, hence we find a similar trend even when we increase number of processes.
 
-However, with the **Floyd-Warshall algorithm**, OpenMP consistently outperformed MPI. The nested loop structure in Floyd-Warshall benefits greatly from OpenMP's shared memory model, where collapsing the loops results in efficient parallel computation. In contrast, MPI's distributed memory model suffers due to communication overhead from frequent updates between processes, leading to diminished performance as the number of processes increases.
+However, this changes for Floyd Warshall. We can see that the trend is very abrupt however OMP runs faster ALWAYS than MPI here, and there is a stable trend in OMP because there is 3 nested loops in FW algorithm, One collapse clause does the trick neat and easy, hence a stable trend with no communication in between, just parallel computation. But in MPI when we divide the 2D arrays on different processes we need for n^2 to communicate with all other processes for updated data each iteration this becomes very communication intensive which does not provide us with our desired speedup, and as we increase the number of processes the time taken increases due to extreme communication overhead, for the same number of vertices !
+
 
 ---
 
