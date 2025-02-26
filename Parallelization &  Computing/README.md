@@ -191,23 +191,23 @@ Function FloydWarshallMPI(D, Π, n, pid, pN):
 
 ### **N-Ary Search Results**  
 - **N=4**, Data Size: 10,000 Elements
-- ![Chart _1](Charts/Chart_01.jpg)
+- ![Chart _1](https://github.com/Bilal-3582/Projects/blob/main/Parallelization%20%26%20%20Computing/charts/Chart_01.jpg)
 - **N=16**, Same Data Size
--   ![Chart_2](Charts/Chart_02.jpg)
+-   ![Chart_2](https://github.com/Bilal-3582/Projects/blob/main/Parallelization%20%26%20%20Computing/charts/Chart_02.jpg)
 
   - (We can see that value of n don’t make any difference only the data size effects the time, however the computation times remain equal for any number of cores)
 - **N-Ary N=4** , Communication & Computation
-- ![Chart_3](Charts/Chart_03.jpg)
+- ![Chart_3](https://github.com/Bilal-3582/Projects/blob/main/Parallelization%20%26%20%20Computing/charts/Chart_03.jpg)
 
 ### **Floyd-Warshall Results**  
 - **N=100 Vertices (10,000 Edges)**
--  ![Chart_4](Charts/Chart_04.jpg)
+-  ![Chart_4](https://github.com/Bilal-3582/Projects/blob/main/Parallelization%20%26%20%20Computing/charts/Chart_04.jpg)
 
 - **N=1000 Vertices (1 Million Edges)**
-- ![Chart_5](Charts/Chart_05.jpg)
+- ![Chart_5](https://github.com/Bilal-3582/Projects/blob/main/Parallelization%20%26%20%20Computing/charts/Chart_05.jpg)
 
 - **Floyd-Warshall N=100** Communication & Computation (X = Cores , Y = Time)
-- ![Chart_6](Charts/Chart_06.jpg)
+- ![Chart_6](https://github.com/Bilal-3582/Projects/blob/main/Parallelization%20%26%20%20Computing/charts/Chart_06.jpg)
 
   - THE Difference between OMP and MPI in Floyd Warshall is very high, so visible that the OMP on scale seems almost negligible.
 
