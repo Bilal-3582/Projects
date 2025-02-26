@@ -191,23 +191,23 @@ Function FloydWarshallMPI(D, Π, n, pid, pN):
 
 ### **N-Ary Search Results**  
 - **N=4**, Data Size: 10,000 Elements
-- ![Chart _1](https://github.com/user-attachments/assets/d21b4ffe-929d-4cc3-a3fb-97ad6435ff35)
+- ![Chart _1](Charts/Chart_01.jpg)
 - **N=16**, Same Data Size
--   ![Chart_2](https://github.com/user-attachments/assets/3d3cbed2-a98d-49f8-8fac-f9dc49300e62)
+-   ![Chart_2](Charts/Chart_02.jpg)
 
   - (We can see that value of n don’t make any difference only the data size effects the time, however the computation times remain equal for any number of cores)
 - **N-Ary N=4** , Communication & Computation
-- ![Chart_3](https://github.com/user-attachments/assets/a1db6c91-d0b1-4c79-a250-656c092f382a)
+- ![Chart_3](Charts/Chart_03.jpg)
 
 ### **Floyd-Warshall Results**  
 - **N=100 Vertices (10,000 Edges)**
--  ![Chart_4](https://github.com/user-attachments/assets/79997a67-42fd-43ee-9ce3-a8057840305f)
+-  ![Chart_4](Charts/Chart_04.jpg)
 
 - **N=1000 Vertices (1 Million Edges)**
-- ![Chart_5](https://github.com/user-attachments/assets/b1e6a191-9c60-4096-8bd3-bf35c2238539)
+- ![Chart_5](Charts/Chart_05.jpg)
 
 - **Floyd-Warshall N=100** Communication & Computation (X = Cores , Y = Time)
-- ![Chart_6](https://github.com/user-attachments/assets/7ab7529f-c8d4-4236-a2f8-b7e6f1b0c185)
+- ![Chart_6](Charts/Chart_06.jpg)
 
   - THE Difference between OMP and MPI in Floyd Warshall is very high, so visible that the OMP on scale seems almost negligible.
 
