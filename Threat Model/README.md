@@ -61,7 +61,7 @@ shown as processes as well as external entities to represent their dual cyber an
 All processes are assumed to have some resources and logs; only very important ones are shown at
 this level.
 
-![DFD-1](main/ThreatModel/Diagrams/SmartHome_Level0.jpeg)
+![DFD-1](Smart%20Home%20_%20Level%201.jpeg))
 
 ### Level 2
 
@@ -81,7 +81,7 @@ traffic is routed through it, it would be impractical to show all the connection
 important to consider its presence. As with the level 1 diagram, only resources and logs relevant to
 this level of abstraction are shown.
 
-![DFD-2-LAN](diagrams/DFD-2-LAN.png)
+![DFD-2-LAN](Smart%20Home%20_%20Level%202.jpeg))
 
 ## STRIDE Threats
 
