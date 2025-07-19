@@ -61,7 +61,7 @@ shown as processes as well as external entities to represent their dual cyber an
 All processes are assumed to have some resources and logs; only very important ones are shown at
 this level.
 
-![DFD-1](diagrams/DFD-1.png)
+![DFD-1](main/ThreatModel/Diagrams/SmartHome_Level0.jpeg)
 
 ### Level 2
 
