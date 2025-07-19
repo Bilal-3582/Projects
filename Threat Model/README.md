@@ -45,7 +45,7 @@ The system is represented as a single process interacting with a few external en
 Smart Home System is a single process that communicates with the Software Company, a user,
 and N smart devices.
 
-![DFD-0](main/Threat%20Model/Diagrams/SmartHome_Level0.jpeg)
+![DFD-0](<img width="750" height="390" alt="Smart Home _ Level 0" src="https://github.com/user-attachments/assets/4ab98107-3c77-4eb5-a194-f0b748e39539" />)
 
 ### Level 1
 
