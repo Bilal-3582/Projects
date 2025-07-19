@@ -162,7 +162,7 @@ An attack tree graphically represents the means an attacker could use to achieve
 Here an attack on information confidentiality of device status is analyzed. This threat corresponds
 to threats I.5, I.6, and I.7 in the STRIDE analysis.
 
-![attack-tree](diagrams/attack-tree.png)
+![attack-tree](atcktree.jpg)
 
 ## DREAD and FAIR
 
