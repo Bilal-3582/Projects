@@ -7,6 +7,7 @@ This project is a partial threat model for a fictional smart home system consist
 and mobile UI, a cloud-deployed backend, local hub instances, and smart devices. The model consists
 of level 0, 1, and 2 data flow diagrams; STRIDE threat analysis; an attack tree; and risk analysis
 with DREAD and FAIR.
+The following was done using OWASP Threat Dragon.
 
 ## Contents <!-- omit in toc -->
 
@@ -44,7 +45,7 @@ The system is represented as a single process interacting with a few external en
 Smart Home System is a single process that communicates with the Software Company, a user,
 and N smart devices.
 
-![DFD-0](diagrams/DFD-0.png)
+![DFD-0](Diagrams/SmartHome_Level0.jpeg)
 
 ### Level 1
 
