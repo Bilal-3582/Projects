@@ -257,7 +257,7 @@ overflow allows a user to subvert ACLs and access all device data. (It is possib
 similar effect trivially if ACLs are not configured or are misconfigured.) For this example, assume
 the MQTT server is written in C.
 
-![fair-4-mqtt](diagrams/fair-4-mqtt.png)
+![fair-4-mqtt](fair-4-mqtt.png)
 
 | Category | Rating (0-10) | Comments                                                         |
 | -------- | ------------- | ---------------------------------------------------------------- |
@@ -274,7 +274,7 @@ already have device information and spoofing capabilities. This vulnerability is
 configuration that allows the state of unauthenticated (spoofable) devices to influence the behavior
 of real devices.
 
-![fair-5-rules](diagrams/fair-5-rules.png)
+![fair-5-rules](fair-5-rules.png)
 
 | Category | Rating (0-10) | Comments                                                                |
 | -------- | ------------- | ----------------------------------------------------------------------- |
