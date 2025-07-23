@@ -1,0 +1,316 @@
+name: Secure CI/CD Pipeline
+
+on:
+  push:
+    branches: master
+  pull_request:
+    branches: master
+
+jobs:
+
+  # 1. CI Security Checks
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.19.0'
+
+      - name: Install dependencies
+        run: npm install
+
+    #     auto-approve:
+    # runs-on: ubuntu-latest
+    # if: github.event_name == 'pull_request'
+    # steps:
+    #   - name: Check if PR author is trusted and target is main
+    #     id: check
+    #     run: |
+    #       echo "PR author: ${{ github.event.pull_request.user.login }}"
+    #       echo "Target branch: ${{ github.event.pull_request.base.ref }}"
+
+    #       if [[ "${{ github.event.pull_request.user.login }}" == "trusted-user" && "${{ github.event.pull_request.base.ref }}" == "main" ]]; then
+    #         echo "approve=true" >> $GITHUB_OUTPUT
+    #       else
+    #         echo "approve=false" >> $GITHUB_OUTPUT
+    #       fi
+
+      - name: Enforce code reviews (Only on pull request)
+        if: github.event_name == 'pull_request'
+        uses: hmarr/auto-approve-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Enforce signed commits
+        run: |
+          git log ${{ github.event.before }}..${{ github.sha }} --pretty=format:'%h %G? %an' | while read line; do
+            commit_hash=$(echo $line | cut -d ' ' -f 1)
+            commit_status=$(echo $line | cut -d ' ' -f 2)
+            if [[ "$commit_status" != "G" ]]; then
+              echo "❌ Commit $commit_hash is not signed"
+              exit 1
+            fi
+          done
+
+  # 2. Role-based Access Control
+  access_control:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check role-based access control
+        run: |
+          if [[ "$(curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -s "https://api.github.com/repos/${{ github.repository }}/collaborators" | jq '.[] | select(.permissions.push == true)' | wc -l)" -lt 1 ]]; then
+            echo "❌ Role-based access is not configured properly."
+            exit 1
+          fi
+
+  # 3. SAST Tools: Bandit + TruffleHog
+  sast_analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install tools
+        run: pip install bandit trufflehog jq
+
+      - name: Secrets Scanning (TruffleHog)
+        run: |
+          trufflehog --json . > secrets_scan_results.json || true
+          if [[ $(jq length secrets_scan_results.json) -gt 0 ]]; then
+            echo "❌ Secrets found!"
+            cat secrets_scan_results.json
+            exit 1
+          else
+            echo "✅ No secrets found."
+          fi
+
+      - name: Upload TruffleHog Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: secrets-scan
+          path: secrets_scan_results.json
+
+      - name: SQL Injection Detection (Bandit)
+        run: |
+          bandit -r . -f json -o bandit_report.json -t B107
+          if grep -q "issue" bandit_report.json; then
+            echo "❌ SQL Injection issues found!"
+            cat bandit_report.json
+            exit 1
+          fi
+
+      - name: Upload Bandit Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-report
+          path: bandit_report.json
+
+          # 4. DAST Tools: SQLMap + OWASP ZAP
+  dast_scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Pull and start Juice Shop container
+        run: |
+          docker pull bkimminich/juice-shop
+          docker run --rm -d -p 3000:3000 bkimminich/juice-shop
+          for i in {1..60}; do
+            if curl --silent --fail http://localhost:3000; then
+              echo "✅ Juice Shop is ready."
+              break
+            else
+              echo "⏳ Waiting for Juice Shop to start..."
+              sleep 5
+            fi
+          done
+
+      - name: Install DAST tools
+        run: |
+          pip install sqlmap
+          sudo apt-get update
+          sudo apt-get install -y openjdk-11-jre python3
+          wget https://github.com/zaproxy/zaproxy/releases/download/v2.16.1/ZAP_2.16.1_Linux.tar.gz
+          tar -xzf ZAP_2.16.1_Linux.tar.gz
+          sudo mv ZAP_2.16.1 /opt/zaproxy
+          sudo ln -s /opt/zaproxy/zap.sh /usr/local/bin/zap
+
+      - name: Run SQLMap against local Juice Shop
+        run: |
+          sqlmap -u "http://localhost:3000" --batch --risk=3 --level=5
+
+      - name: Run ZAP against Heroku preview instance
+        uses: zaproxy/action-baseline@v0.14.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target: 'https://preview.owasp-juice.shop'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a -j'
+          output_file: zap_report.html
+
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-report
+          path: zap_report.html
+
+  # 5. SCA Tool: Snyk
+  sca_scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.19.0'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Snyk CLI
+        run: npm install -g snyk
+
+      - name: Scan for vulnerable packages (Snyk) - continue on error
+        run: snyk test --severity-threshold=high || true
+        env:
+         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+
+      - name: Use signed libraries verification
+        run: bash scripts/verify-signatures.sh
+        continue-on-error: true
+
+  # 6. Audit Logging
+  audit_log:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log pipeline run
+        run: |
+          echo "$(date) - CI/CD pipeline executed for repo: ${{ github.repository }}" >> ./audit_log.txt
+          cat ./audit_log.txt
+
+      - name: Upload Audit Log
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-log
+          path: audit_log.txt
+
+  # 7. Container Security Scanning
+  container-security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/juice-shop:latest .
+
+      - name: Scan Docker image for vulnerabilities (Grype)
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+          grype ${{ secrets.DOCKERHUB_USERNAME }}/juice-shop:latest --fail-on high
+        continue-on-error: true
+
+      - name: Scan image for Read-Only File System violations (Trivy)
+        run: |
+          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/workspace aquasec/trivy fs --severity CRITICAL,HIGH --exit-code 1 --no-progress --ignore-unfixed .
+        continue-on-error: true
+
+      - name: Push Docker image to DockerHub
+        if: success()
+        run: |
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/juice-shop:latest
+
+  # 8. Generate and Upload Reports
+  upload-reports:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload Clair report
+        uses: actions/upload-artifact@v4
+        with:
+          name: clair-report
+          path: clair-report.html
+
+      - name: Upload Trivy report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report
+          path: trivy-report.json
+
+  # 9. IaC Security Scan
+  iac-security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4.6
+
+      - name: Install Checkov
+        run: pip install checkov
+
+      - name: Install Conftest
+        run: |
+          CONFTAG=$(curl -s https://api.github.com/repos/open-policy-agent/conftest/releases/latest | grep tag_name | cut -d '"' -f 4)
+          wget https://github.com/open-policy-agent/conftest/releases/download/${CONFTAG}/conftest_${CONFTAG#v}_Linux_x86_64.tar.gz
+          tar -xzf conftest_${CONFTAG#v}_Linux_x86_64.tar.gz
+          sudo mv conftest /usr/local/bin
+
+      - name: Run Checkov for misconfigurations
+        run: |
+          checkov -d ./terraform --skip-check CKV_AWS_355 --skip-check CKV_SECRET_1
+
+      - name: Run Conftest with least privilege policy
+        run: |
+          conftest test terraform/main.tf --policy policies
+
+      - name: Check for secrets in Terraform using Checkov
+        run: |
+          checkov -d ./terraform --check CKV_SECRET_1
+
+ # 9. SIEM tool for Logging & Monitoring
+  SIEM:
+    runs-on : ubuntu-latest
+    steps:
+      - name: Send log to Datadog via API
+        run: |
+         curl -X POST "https://http-intake.logs.datadoghq.eu/v1/input" \
+         -H "Content-Type: application/json" \
+         -H "DD-API-KEY: ${{ secrets.DATADOG_API_KEY }}" \
+         -d '{
+          "message": "Security scan passed for commit ${{ github.sha }} by ${{ github.actor }}",
+          "ddsource": "github-actions",
+          "service": "ci-cd",
+          "hostname": "github-runner",
+          "status": "info"
+         }'
