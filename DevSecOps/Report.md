@@ -1,4 +1,4 @@
-[]{#anchor}** Project Overview**
+**Project Overview**
 
 This project involves setting up a **Secure CI/CD pipeline** for a
 chosen open-source application. The pipeline integrates multiple
