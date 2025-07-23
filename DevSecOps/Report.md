@@ -9,13 +9,13 @@ Actions**, **SAST**, **DAST**, **SCA**, **Container Security**, and
 static and dynamic analysis, enforce secure coding practices, and ensure
 the security of the deployed containers.
 
-[]{#anchor-1}**1. Repo : Owasp - Juice Shop :
+**1. Repo : Owasp - Juice Shop :
 https://github.com/BilalBaree/Owasp_JuiceShop**
 
-![](media/Pictures/100000000000026F0000015976F3804ADBA5208B.png){width="6.4898in"
+![](media/100000000000026F0000015976F3804ADBA5208B.png){width="6.4898in"
 height="3.5937in"}
 
-[]{#anchor-2}**2. Git Branching Strategy**
+**2. Git Branching Strategy**
 
 -   **Git Strategy Chosen**: **GitHub Flow\
     > **
@@ -30,7 +30,7 @@ height="3.5937in"}
 ![](media/Pictures/1000000000000260000001755C4F45F07BF538DB.png){width="6.3335in"
 height="3.8854in"}
 
-[]{#anchor-3}**3. CI Tool: GitHub Actions**
+**3. CI Tool: GitHub Actions**
 
 -   **CI Tool Chosen**: **GitHub Actions\
     > **
@@ -45,12 +45,12 @@ height="3.8854in"}
 ![](media/Pictures/10000000000001C70000012AEDD05204F8B07446.png){width="4.7398in"
 height="3.1043in"}\
 
-[]{#anchor-4}**4. Security Checks in CI**
+**4. Security Checks in CI**
 
 The following security checks are integrated into the CI pipeline to
 ensure that the code adheres to secure practices:
 
-[]{#anchor-5}**a. Code Reviews and Signed Commits**
+**a. Code Reviews and Signed Commits**
 
 -   **Enforce Code Reviews**: The pipeline ensures that code reviews are
     > mandatory for pull requests before merging into the main branch.\
@@ -59,14 +59,14 @@ ensure that the code adheres to secure practices:
     > signed to guarantee authenticity. This check ensures that only
     > trusted contributors can make changes.\
 
-[]{#anchor-6}**b. Role-Based Access Control (RBAC)**
+**b. Role-Based Access Control (RBAC)**
 
 -   **Access Control Enforcement**: The pipeline includes a check to
     > verify that role-based access is configured correctly in the
     > GitHub repository. It ensures that only authorized users have
     > write access to critical branches.\
 
-[]{#anchor-7}**c. Audit Logging**
+**c. Audit Logging**
 
 -   **Pipeline Execution Logs**: Each pipeline run logs its execution
     > details to an audit log, helping track security-related activities
@@ -133,12 +133,12 @@ ensure that the code adheres to secure practices:
 
   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-[]{#anchor-8}**5. SAST (Static Application Security Testing)**
+**5. SAST (Static Application Security Testing)**
 
 The pipeline integrates two key **SAST** tools to identify
 vulnerabilities in the codebase:
 
-[]{#anchor-9}**a. TruffleHog (Secrets Scanning)**
+**a. TruffleHog (Secrets Scanning)**
 
 -   **Purpose**: Detect hardcoded secrets, such as API keys or
     > passwords.\
@@ -149,7 +149,7 @@ vulnerabilities in the codebase:
 -   **Negative Case**: Secrets are found, and the pipeline fails,
     > preventing potentially sensitive data from being exposed.\
 
-[]{#anchor-10}**b. Bandit (SQL Injection Detection)**
+**b. Bandit (SQL Injection Detection)**
 
 -   **Purpose**: Detect potential SQL injection vulnerabilities within
     > the code.\
@@ -208,13 +208,13 @@ vulnerabilities in the codebase:
 
   ---------------------------------------------------------------------------
 
-[]{#anchor-11}**6. DAST (Dynamic Application Security Testing)**
+**6. DAST (Dynamic Application Security Testing)**
 
 Although DAST tools are not fully implemented, **SQLMap** and **OWASP
 ZAP** are integrated into the pipeline to check for runtime
 vulnerabilities:
 
-[]{#anchor-12}**a. SQLMap (SQL Injection Detection)**
+**a. SQLMap (SQL Injection Detection)**
 
 -   **Purpose**: Identify SQL injection vulnerabilities in the deployed
     > application.\
@@ -225,7 +225,7 @@ vulnerabilities:
 -   **Negative Case**: SQL injection vulnerabilities are identified, and
     > the pipeline fails, preventing deployment.\
 
-[]{#anchor-13}**b. OWASP ZAP (Cross-Site Scripting Detection)**
+**b. OWASP ZAP (Cross-Site Scripting Detection)**
 
 -   **Purpose**: Scan for cross-site scripting (XSS) vulnerabilities in
     > web applications.\
@@ -284,12 +284,12 @@ vulnerabilities:
 
   ----------------------------------------------------------------------------------------------------
 
-[]{#anchor-14}**7. SCA (Software Composition Analysis)**
+**7. SCA (Software Composition Analysis)**
 
 The pipeline uses **Snyk** to scan for vulnerable third-party
 dependencies:
 
-[]{#anchor-15}**a. Snyk (Vulnerable Packages Scan)**
+**a. Snyk (Vulnerable Packages Scan)**
 
 -   **Purpose**: Scan the code for insecure third-party dependencies.\
 
@@ -299,7 +299,7 @@ dependencies:
 -   **Negative Case**: Critical vulnerabilities are found, and the
     > pipeline halts to fix the issues.\
 
-[]{#anchor-16}**b. Signed Libraries Verification**
+**b. Signed Libraries Verification**
 
 -   **Purpose**: Ensure that libraries used in the project are signed to
     > prevent tampering.\
@@ -339,12 +339,12 @@ dependencies:
 
   --------------------------------------------------
 
-[]{#anchor-17}**8. Container Security**
+**8. Container Security**
 
 The pipeline integrates security scanning for containers, specifically
 focusing on Docker images:
 
-[]{#anchor-18}**a. Clair (Root Access Check)**
+**a. Clair (Root Access Check)**
 
 -   **Purpose**: Scan the Docker image for root access privileges.\
 
@@ -353,7 +353,7 @@ focusing on Docker images:
 
 -   **Negative Case**: Root access is detected, and the pipeline fails.\
 
-[]{#anchor-19}**b. Trivy (Read-Only File System)**
+**b. Trivy (Read-Only File System)**
 
 -   **Purpose**: Ensure that containers use read-only file systems for
     > security.\
@@ -417,12 +417,12 @@ focusing on Docker images:
 
   ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-[]{#anchor-20}**9. IaC (Infrastructure as Code) Security**
+**9. IaC (Infrastructure as Code) Security**
 
 The pipeline integrates **Checkov** and **Conftest** to enforce best
 practices and security for infrastructure as code:
 
-[]{#anchor-21}**a. Checkov (Misconfigurations in IaC)**
+**a. Checkov (Misconfigurations in IaC)**
 
 -   **Purpose**: Scan Terraform configurations for misconfigurations.\
 
@@ -431,7 +431,7 @@ practices and security for infrastructure as code:
 -   **Negative Case**: Misconfigurations are found, and the pipeline
     > fails.\
 
-[]{#anchor-22}**b. Conftest (Compliance and Least Privilege)**
+**b. Conftest (Compliance and Least Privilege)**
 
 -   **Purpose**: Ensure compliance with policies such as least
     > privilege.\
